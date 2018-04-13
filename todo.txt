@@ -1,0 +1,22 @@
+this doc will be moved to grid doc soon
+
+20180401
+- datetime based noti
+  - hourly query -> too many noti
+  - how to make it noisy
+    - daily noti at 00 hour: based on only date value
+    - hourly noti on other hours: base on non-zero hour items
+
+20180317
+* create a twilio sms messaging solution
+  + setup scheduler on heroku
+    - add due_date field on 
+      - target categories : todo, daily, ...
+      - condition state : todo, working
+      - or independant field
+  > create data model on my app
+    - db schema
+    - function on db_handler 
+  - setup twilio and write sms sending code
+* using gridedit for todo tool
+  - check cx_freeze for linux build

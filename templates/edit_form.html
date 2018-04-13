@@ -1,0 +1,107 @@
+<script>
+    function edit_box_submit() {
+        navigator.geolocation.getCurrentPosition(function(pos) {
+            frm = $('#edit_form')
+
+            lat = pos.coords.latitude
+            lon = pos.coords.longitude
+
+            // why below query dosen't work for edit_form
+            // same code for add_form is working
+            //frm.children("input[name='geo_lat']").val(lat)
+            //frm.children("input[name='geo_lon']").val(lon)
+            frm.find('#edit_geo_lat').val(lat)
+            frm.find('#edit_geo_lon').val(lon)
+            
+            frm.submit()
+        })
+    }
+</script>
+<script>
+    $( function() {
+        $('#edit_due_date').datepicker({dateFormat: 'yy-mm-dd'});
+    });
+</script>
+ <div id="edit_box" style="display:none">
+    <form id="edit_form" action="edit_lifemark" method="post">
+        <table>
+            <tr>
+                <td><input type="button" value="update lifemark" onclick="edit_box_submit()" /></td>
+                <td><input type="button" value="cancel" onclick="toggle_edit_box()" /></td>
+            </tr>
+            <tr>
+                <td>key</td>
+                <td><div id="div_edit_key"></div><input type="hidden" id="edit_key" name="key" /></td>
+            </tr>
+            <tr>
+                <td>title</td>
+                <td><input id="edit_title" name="title" size="30" /></td>
+            </tr>
+            <tr>
+                <td>link</td>
+                <td><input id="edit_link" name="link" size="30" /></td>
+            </tr>
+            <tr>
+                <td>category</td>
+                <td>
+                    <input id="edit_category" name="category" />
+                    {% if categories|length > 0 %}
+                    <select onchange="set_edit_category(this.value)">
+                        {% for c in categories %}
+                        <option value='{{c}}'>{{c}}</option>
+                        {% endfor %}
+                    </select>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>is complete</td>
+                <td>
+                    {% if states|length > 0 %}
+                    <select id="edit_state" name="state" >
+                        {% for s in states %}
+                        <option value="{{s}}">{{s}}</option>
+                        {% endfor %}
+                    </select>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>due date</td>
+                <td>
+                    <input type="text" id="edit_due_date" name="due_date" readonly />
+                    <select id="edit_due_hour" name="due_hour" >
+                        {% for h in range(0, 24) %}
+                        <option value="{{h}}">{{h}}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>rating</td>
+                <td>
+                    <input type="text" id="edit_rating" name="rating" maxlength="5" size="5"/>
+                </td>
+            </tr>
+            <tr>
+                <td>tags</td>
+                <td><input id="edit_tags" name="tags" size="30" /></td>
+            </tr>
+            <tr>
+                <td>desc</td>
+                <td><textarea id="edit_desc" name="desc" rows="10", cols="40"></textarea></td>
+            </tr>
+            <tr>
+                <td>img link</td>
+                <td><input id="edit_img_link" name="img_link"/></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <img id="edit_img" src="" alt="image" ondblclick="show_fullsize_img('edit')"/>
+                </td>
+            </tr>
+            <input type="hidden" id="edit_geo_lat" name="geo_lat" />
+            <input type="hidden" id="edit_geo_lon" name="geo_lon" />
+        </table>
+    </form>
+</div>

@@ -1,0 +1,4 @@
+latest.dump*
+__pycache__/
+.idea/
+tags

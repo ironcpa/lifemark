@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=yes">
+    <title>Title</title>
+    <script src="static/jquery-3.2.1.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#add_box').hide()
+        })
+   </script>
+</head>
+<body>
+{% include 'add_form.html' %}
+    <table>
+        {% for img in images %}
+        {%     set img_link = img[1] %}
+        {%     set show_img_link = get_imgur_thumbnail(img_link, 'm') %}
+        <tr>
+            <td><input type="button" value="lifemark" onclick="create_lifemark('{{ show_img_link }}', '{{ img_link }}')"</td>
+            <td>{{ img[0] }}</td>
+            <td><img src="{{ get_imgur_thumbnail(img_link, 's') }}" /></td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

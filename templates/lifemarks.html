@@ -1,0 +1,245 @@
+<html>
+    <!--
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="expires" content="-1" />
+    -->
+    <meta name="viewport" content="width=device-width, user-scalable=yes initial-scale=1">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <style>
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+    <script src="static/jquery-3.2.1.min.js"></script>
+    <script src="static/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+    <script src="static/desc_editor.js?t=32324"></script>
+    <script type="text/javascript">
+        function del_lifemark(id) {
+            if (!confirm('want to delete?')) {
+                return
+            }
+
+            frm = $('#list_form')[0]
+            input_key = $('#del_key')[0]
+            input_key.value = id
+
+            frm.submit()
+        }
+        function get_edit_tag(key, field) {
+            return $('#row_'+key).find('#'+field)
+        }
+        function get_edit_text(key, field) {
+            tag = get_edit_tag(key, field)
+            if (tag) {
+                return get_edit_tag(key, field).text()
+            } else {
+                return ''
+            }
+        }
+        function show_edit_lifemark(key) {
+            title = get_edit_text(key, 'title')
+            link = ''
+            link_tag = get_edit_tag(key, 'link')
+            if (link_tag) {
+                link = link_tag.find('a').attr('href')
+            }
+            category = get_edit_text(key, 'category')
+            state = get_edit_tag(key, 'state').text()
+            due_datetime = get_edit_tag(key, 'due_datetime').text()
+            due_date = due_datetime.substring(0, 10)
+            due_hour = parseInt(due_datetime.substring(11, 13))
+            console.log(due_hour)
+            rating = get_edit_tag(key, 'rating').text()
+            tags = get_edit_text(key, 'tags')
+            desc = get_edit_tag(key, 'desc').find('pre').text()
+            // use small link for save traffic
+            img_link = get_edit_text(key, 'img_link')
+            show_img_link = get_edit_text(key, 'img_small_link')
+
+            $('#div_edit_key').text(key)
+            $('#edit_key').val(key)
+            $('#edit_title').val(title)
+            $('#edit_link').val(link)
+            $('#edit_category').val(category)
+            $('#edit_state').val(state)
+            $('#edit_due_date').val(due_date)
+            $('#edit_due_hour').val(due_hour)
+            $('#edit_rating').val(rating)
+            $('#edit_tags').val(tags)
+            $('#edit_desc').val(desc)
+            $('#edit_img_link').val(img_link)
+
+            box_width = $('#edit_box').width()
+            if (img_link && img_link != "") {
+                $('#edit_img').attr('width', box_width)
+                $('#edit_img').attr('src', show_img_link)
+            } else {
+                $('#edit_img').attr('width', 0)
+                $('#edit_img').attr('src', '')
+            }
+            // console.log('show_img_link: ' + show_img_link)
+            // console.log('edit_img.src: ' +$('#edit_img').attr('src'))
+            // console.log('\tedit_box.w: ' + $('#edit_box').width())
+
+            $('#add_box').hide()
+            $('#edit_box').show()
+
+            $('html, body').scrollTop(0)
+            // $('#edit_title').select()
+
+            toggle_editor()
+        }
+        function create_new(key) {
+            title = get_edit_text(key, 'title')
+            link = ''
+            link_tag = get_edit_tag(key, 'link')
+            if (link_tag) {
+                link = link_tag.find('a').attr('href')
+            }
+            category = get_edit_text(key, 'category')
+            tags = get_edit_text(key, 'tags')
+            desc = get_edit_tag(key, 'desc').find('pre').text()
+
+            $('#add_title').val(title)
+            $('#add_link').val(link)
+            $('#add_category').val(category)
+            $('#add_tags').val(tags)
+            $('#add_desc').val(desc)
+            
+            $('html, body').scrollTop(0)
+        }
+        function toggle_edit_box() {
+            $('#add_box').toggle()
+            $('#edit_box').toggle()
+            
+            toggle_editor()
+        }
+        function toggle_editor() {
+            if ($('#add_box').is(':visible')) {
+                editor_module.set_editor('add_desc')
+            } else {
+                editor_module.set_editor('edit_desc')
+            }
+        }
+        function show_fullsize_img(prefix) {
+            curr_key = $('#' + prefix + '_key').val()
+            full_link = get_edit_text(curr_key, 'img_link')
+            $('#' + prefix + '_img').attr('src', full_link)
+        }
+        function set_edit_category(val) {
+            $('#edit_category').val(val)
+        }
+        function open_search_url() {
+            data = {
+                target_fields: $("input[name='target_fields']").val(),
+                target_states: $("input[name='target_states']").val(),
+                keyword: $("input[name='keyword']").val(),
+                is_all_match: $("input[name='is_all_match']:checked").val(),
+                search_ref: $("input[name='search_ref']:checked").val(),
+            }
+
+            console.log(data)
+            url = window.location.href.split('?')[0] + '?' + $.param(data)
+            console.log(url)
+            window.location.href = url
+        }
+        function submit_search_daily() {
+            fields = $("input[name='target_fields']")
+            fields.val('category')
+
+            keyword = $("input[name='keyword']")
+            keyword.val('daily')
+
+            all_states = $('#chk_all_states').is(':checked')
+            if (! all_states) {
+                states = $("input[name='target_states']")
+                states.val('todo working')
+            }
+
+            $('#search_form')[0].submit()
+        }
+        function submit_search_state(state) {
+            fields = $("input[name='target_fields']")
+            fields.val('state')
+
+            kewords = $("input[name='keyword']")
+            kewords.val(state)
+
+            $('#search_form')[0].submit()
+        }
+        function go_to_content(key) {
+            $('#row_'+key).get(0).scrollIntoView()
+        }
+    </script>
+    <body>
+        <h1><a href="show_all_images">Add with Image</a></h1>
+        {% include 'add_form.html' %}
+        {% include 'edit_form.html' %}
+
+        <!--<form id="search_form" action="search_lifemark" method="post">-->
+        <form id="search_form" action="javascript:open_search_url()">
+            <input type="button" value="search daily todos" onclick="submit_search_daily()"/>
+            <input type="checkbox" id="chk_all_states"/>all states<br/>
+            <input type="button" value="todo" onclick="submit_search_state('todo')"/>
+            <input type="button" value="working" onclick="submit_search_state('state')"/><br/>
+            <!--<input type="submit" value="search lifemark" />-->
+            <input type="button" value="search lifemark" onclick="open_search_url()" />
+            <input type="hidden" name="target_fields" />
+            <input type="hidden" name="target_states" />
+            <input type="text" name="keyword" />
+            <input type="checkbox" name="search_ref" />search on ref
+            <input type="checkbox" name="is_all_match" checked="true"/>all match
+        </form>
+
+        {% if text_results %}
+        title with text line search results
+        <table border="1">
+            {% for k, t in text_results.items() %}
+            {%   set state = t['state'] %}
+            {%   set category = t['category'] %}
+            {%   set bg_style = "" %}
+            {%   if category == 'ref' %}
+            {%      set bg_style = "background-color: #ADFF2F" %}
+            {%   endif %}
+            {%   if state == 'todo' %}
+            {%      set bg_style = "background-color: yellow" %}
+            {%   elif state == 'working' %}
+            {%      set bg_style = "background-color: cyan" %}
+            {%   elif state == 'complete' %}
+            {%      set bg_style = "background-color: lightgray" %}
+            {%   endif %}
+            <!--<tr onclick="go_to_content('{{k}}')" style="background-color: yellow">-->
+            <tr onclick="go_to_content('{{k}}')" style="{{bg_style}}">
+                <td>{{ k }}</td>
+                <td>{{ category }}</td>
+                <td colspan="2">{{ t['title'] }}</td>
+            </tr>
+            {%   for l in t['lines'] %}
+            <tr onclick="go_to_content('{{k}}')">
+                <td></td>
+                <td>{{ l[0] }}</td>
+                <td>{{ l[1] }}</td>
+                <td>{{ l[2] }}</td>
+            </tr>
+            {%   endfor %}
+            {% endfor %}
+        </table>
+        {% endif %}
+
+        show all lifemarks
+        <form id="list_form" action="del_lifemark" method="post">
+            <table border="1" style="max-width: 800px">
+                {% for lm in lifemarks %}
+                <tr id="row_{{ get_lifemark_field(lm, 'key') }}"> 
+                    {% include 'lifemark_row.html' %}
+                </tr>
+                {% endfor %}
+            </table>
+            <input type="hidden" id="del_key" name="key" />
+        </form>
+    </body>
+    <script>
+        toggle_editor()
+    </script>
+</html>

@@ -1,0 +1,63 @@
+{% set mkey = get_lifemark_field(lm, 'key') %}
+{% set link = get_lifemark_field(lm, 'link') %}
+{% set img_link = get_lifemark_field(lm, 'img_link') %}
+{% set category = get_lifemark_field(lm, 'category') %}
+{% set state = get_lifemark_field(lm, 'state') %}
+{% set due_date = get_lifemark_field(lm, 'due_date') %}
+{% set rating = get_lifemark_field(lm, 'rating') %}
+{% set geo_lat = get_lifemark_field(lm, 'geo_lat') %}
+{% set geo_lon = get_lifemark_field(lm, 'geo_lon') %}
+{% set u_geo_lat = get_lifemark_field(lm, 'geo_lat') %}
+{% set u_geo_lon = get_lifemark_field(lm, 'geo_lon') %}
+{% set bg_style = "" %}
+{% if category == 'ref' %}
+{%    set bg_style = "background-color: #ADFF2F" %}
+{% endif %}
+{% if state == 'todo' %}
+{%    set bg_style = "background-color: yellow" %}
+{% elif state == 'working' %}
+{%    set bg_style = "background-color: cyan" %}
+{% elif state == 'complete' %}
+{%    set bg_style = "background-color: lightgray" %}
+{% endif %}
+<td style="{{bg_style}}">
+    <span id='{{mkey}}_key'>{{ mkey }}</span>
+    <input type="button" value="top" onclick="$('html, body').scrollTop(0)" />
+    <input type="button" value="del" onclick="del_lifemark({{ mkey }})" />
+    <input type="button" value="edit" onclick="show_edit_lifemark({{ mkey }})" />
+    {% if geo_lat and geo_lat > 0 %}
+    <input type="button" value="map" onclick="location.href='show_map?lat={{ geo_lat }}&lon={{ geo_lon }}'" />
+    {% endif %}
+    {% if u_geo_lat and u_geo_lat > 0 %}
+    <input type="button" value="recent_map" onclick="location.href='show_map?lat={{ u_geo_lat }}&lon={{ u_geo_lon }}'" />
+    {% endif %}
+    <input type="button" value="new" onclick="create_new({{mkey}})" />
+    <br/>
+    {% if link and link != '' %}
+    title: <span id="link"><a href="{{ link }}">{{ get_lifemark_field(lm, 'title') }}</a></span>
+    <span id="title" style="display: none">{{ get_lifemark_field(lm, 'title') }}</span><br/>
+    {% else %}
+    title: <span id="title">{{ get_lifemark_field(lm, 'title') }}</span><br/>
+    {% endif %}
+    cdate:{{ get_lifemark_field(lm, 'cdate') }}<br/>
+    udate:{{ get_lifemark_field(lm, 'udate') }}<br/>
+    category:<span id="category">{{ category }}</span><br/>
+    {% if state is not none %}
+    state: <span id='state'>{{ state }}</span><br/>
+    {% endif %}
+    {% if due_date is not none %}
+    due: <span id='due_datetime'>{{ due_date }}</span><br/>
+    {% endif %}
+    {% if rating is not none %}
+    due: <span id='rating'>{{ rating }}</span><br/>
+    {% endif %}
+    tags: <span id="tags">{{ get_lifemark_field(lm, 'tags') }}</span><br/>
+    <div id="desc"><pre>{{ get_lifemark_field(lm, 'descr') }}</pre></div><br/>
+</td>
+<td>
+    {% if img_link != '' %}
+    <img src="{{ get_imgur_thumbnail(img_link, 's') }}" />
+    <span id="img_link" style="display:none">{{ img_link }}</span><br/>
+    <span id="img_small_link" style="display:none">{{ get_imgur_thumbnail(img_link, 'm') }}</span><br/>
+    {% endif %}
+</td>
