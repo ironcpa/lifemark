@@ -2,10 +2,10 @@
     function edit_box_submit() {
         navigator.geolocation.getCurrentPosition(
             function(pos) {
-                frm = $('#edit_form')
+                var frm = $('#edit_form')
 
-                lat = pos.coords.latitude
-                lon = pos.coords.longitude
+                var lat = pos.coords.latitude
+                var lon = pos.coords.longitude
 
                 // why below query dosen't work for edit_form
                 // same code for add_form is working
@@ -17,7 +17,7 @@
                 frm.submit()
             },
             function() {
-                frm = $('#edit_form')
+                var frm = $('#edit_form')
 
                 frm.find('#edit_geo_lat').val(0)
                 frm.find('#edit_geo_lon').val(0)

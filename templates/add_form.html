@@ -2,8 +2,8 @@
     function create_lifemark(show_img_link, img_link) {
         var box_width = $('#add_box').width()
         var img_tag = $('#add_form').find('#show_img')
-        var img_tag.attr('src', show_img_link)
-        var img_tag.attr('width', box_width)
+        img_tag.attr('src', show_img_link)
+        img_tag.attr('width', box_width)
 
         $('#img_link').val(img_link)
 
@@ -15,8 +15,7 @@
     function add_box_submit() {
         navigator.geolocation.getCurrentPosition(
             function(pos) {
-                var frm = $('#add_form')
-
+                var frm = $('#add_form') 
                 var lat = pos.coords.latitude
                 var lon = pos.coords.longitude
 
