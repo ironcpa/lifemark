@@ -1,20 +1,30 @@
 <script>
     function edit_box_submit() {
-        navigator.geolocation.getCurrentPosition(function(pos) {
-            frm = $('#edit_form')
+        navigator.geolocation.getCurrentPosition(
+            function(pos) {
+                frm = $('#edit_form')
 
-            lat = pos.coords.latitude
-            lon = pos.coords.longitude
+                lat = pos.coords.latitude
+                lon = pos.coords.longitude
 
-            // why below query dosen't work for edit_form
-            // same code for add_form is working
-            //frm.children("input[name='geo_lat']").val(lat)
-            //frm.children("input[name='geo_lon']").val(lon)
-            frm.find('#edit_geo_lat').val(lat)
-            frm.find('#edit_geo_lon').val(lon)
-            
-            frm.submit()
-        })
+                // why below query dosen't work for edit_form
+                // same code for add_form is working
+                //frm.children("input[name='geo_lat']").val(lat)
+                //frm.children("input[name='geo_lon']").val(lon)
+                frm.find('#edit_geo_lat').val(lat)
+                frm.find('#edit_geo_lon').val(lon)
+                
+                frm.submit()
+            },
+            function() {
+                frm = $('#edit_form')
+
+                frm.find('#edit_geo_lat').val(0)
+                frm.find('#edit_geo_lon').val(0)
+                
+                frm.submit()
+            }
+        )
     }
 </script>
 <script>

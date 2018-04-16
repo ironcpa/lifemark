@@ -1,9 +1,9 @@
 <script>
     function create_lifemark(show_img_link, img_link) {
-        box_width = $('#add_box').width()
-        img_tag = $('#add_form').find('#show_img')
-        img_tag.attr('src', show_img_link)
-        img_tag.attr('width', box_width)
+        var box_width = $('#add_box').width()
+        var img_tag = $('#add_form').find('#show_img')
+        var img_tag.attr('src', show_img_link)
+        var img_tag.attr('width', box_width)
 
         $('#img_link').val(img_link)
 
@@ -13,17 +13,27 @@
         $('#title').select()
     }
     function add_box_submit() {
-        navigator.geolocation.getCurrentPosition(function(pos) {
-            frm = $('#add_form')
+        navigator.geolocation.getCurrentPosition(
+            function(pos) {
+                var frm = $('#add_form')
 
-            lat = pos.coords.latitude
-            lon = pos.coords.longitude
+                var lat = pos.coords.latitude
+                var lon = pos.coords.longitude
 
-            frm.children("input[name='geo_lat']").val(lat)
-            frm.children("input[name='geo_lon']").val(lon)
-            
-            frm.submit()
-        })
+                frm.children("input[name='geo_lat']").val(lat)
+                frm.children("input[name='geo_lon']").val(lon)
+                
+                frm.submit()
+            },
+            function() {
+                var frm = $('#add_form')
+
+                frm.children("input[name='geo_lat']").val(0)
+                frm.children("input[name='geo_lon']").val(0)
+
+                frm.submit()
+            }
+        )
     }
     function set_add_category(val) {
         $('#add_category').val(val)

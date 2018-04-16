@@ -9,8 +9,8 @@ from pprint import pprint
 from collections import OrderedDict
 import json
 
-app = Flask(__name__)
-app.secret_key = 'dummy key'
+application = Flask(__name__)
+application.secret_key = 'dummy key'
 
 
 def get_keywords_lines(lifemarks, keywords, search_fields=None):
@@ -42,7 +42,7 @@ def get_keywords_lines(lifemarks, keywords, search_fields=None):
     return search_dict
 
 
-@app.context_processor
+@application.context_processor
 def utility_processor():
     def get_lifemark_field(lifemark, fname):
         index = LifemarkFieldDef.index(fname)
@@ -74,12 +74,12 @@ def get_req_datetime(request):
     return due_datetime
 
 
-@app.route('/')
+@application.route('/')
 def root():
     return 'this is flask root'
 
 
-@app.route('/lifemarks', methods=['GET'])
+@application.route('/lifemarks', methods=['GET'])
 def show_lifemarks():
     keywords = [k for k in request.values['keyword'].split()] \
                if 'keyword' in request.values else None
@@ -117,13 +117,15 @@ def show_lifemarks():
                            text_results=text_results)
 
 
-@app.route('/search_lifemark', methods=['POST'])
+@application.route('/search_lifemark', methods=['POST'])
 def search_lifemark():
     return redirect('/lifemarks', code=307)
 
 
-@app.route('/add_lifemark', methods=['POST'])
+@application.route('/add_lifemark', methods=['POST'])
 def add_lifemark():
+    print('debug: add_lifemark')
+    print(request.values)
     title = request.values['title']
     link = request.values['link']
     desc = request.values['desc']
@@ -154,7 +156,7 @@ def add_lifemark():
         return 'db error'
 
 
-@app.route('/edit_lifemark', methods=['POST'])
+@application.route('/edit_lifemark', methods=['POST'])
 def edit_lifemark():
     key = request.values['key']
     title = request.values['title']
@@ -189,7 +191,7 @@ def edit_lifemark():
         return 'db error'
 
 
-@app.route('/del_lifemark', methods=['POST'])
+@application.route('/del_lifemark', methods=['POST'])
 def del_lifemark():
     key = request.values['key']
 
@@ -200,7 +202,7 @@ def del_lifemark():
         return 'db error'
 
 
-@app.route('/imgur_auth_callback')
+@application.route('/imgur_auth_callback')
 def imgur_auth_callback():
     error = request.args.get('error', '')
     if error:
@@ -219,7 +221,7 @@ def imgur_auth_callback():
     return redirect(url)
 
 
-@app.route('/show_all_images')
+@application.route('/show_all_images')
 def show_all_images():
     token = request.args.get('token')
     if not token:
@@ -239,19 +241,19 @@ def show_all_images():
                            states=get_states())
 
 
-@app.route('/imgur_login')
+@application.route('/imgur_login')
 def imgur_login():
     return '<a href="{}">login</a>'.format(imgur_handler.get_auth_url())
 
 
-@app.route('/show_map')
+@application.route('/show_map')
 def show_map():
     lat = request.values['lat']
     lon = request.values['lon']
     return render_template('/show_map.html', geo_lat=lat, geo_lon=lon)
 
 
-@app.route('/all_daily')
+@application.route('/all_daily')
 def all_daily():
     daily_list = db_handler.get_daily()
 
@@ -264,7 +266,7 @@ def all_daily():
     return json.dumps(rdict)
 
 
-@app.route('/save_daily', methods=['POST'])
+@application.route('/save_daily', methods=['POST'])
 def save_daily():
     req_data = request.values['save_json']
     dict = json.loads(req_data)
@@ -294,7 +296,7 @@ def get_states():
 
 
 if __name__ == '__main__':
-    app.run()
+    application.run()
 
     # with app.test_request_context():
     #     print(url_for('hello'))
