@@ -79,6 +79,12 @@ def root():
     return 'this is flask root'
 
 
+## doen't need this route: in nginx server config
+#@application.route('/heart_beat')
+#def heart_beat():
+#    return 'it workds'
+
+
 @application.route('/lifemarks', methods=['GET'])
 def show_lifemarks():
     keywords = [k for k in request.values['keyword'].split()] \
@@ -124,8 +130,6 @@ def search_lifemark():
 
 @application.route('/add_lifemark', methods=['POST'])
 def add_lifemark():
-    print('debug: add_lifemark')
-    print(request.values)
     title = request.values['title']
     link = request.values['link']
     desc = request.values['desc']
