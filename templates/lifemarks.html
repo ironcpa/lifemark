@@ -38,6 +38,8 @@
             }
         }
         function show_edit_lifemark(key) {
+            event.stopPropagation()
+
             title = get_edit_text(key, 'title')
             link = ''
             link_tag = get_edit_tag(key, 'link')
@@ -213,7 +215,10 @@
             <tr onclick="go_to_content('{{k}}')" style="{{bg_style}}">
                 <td>{{ k }}</td>
                 <td>{{ category }}</td>
-                <td colspan="2">{{ t['title'] }}</td>
+                <td colspan="2">
+                    {{ t['title'] }}
+                    <input type="button" value="edit" onclick="show_edit_lifemark({{ k }})" />
+                </td>
             </tr>
             {%   for l in t['lines'] %}
             <tr onclick="go_to_content('{{k}}')">
