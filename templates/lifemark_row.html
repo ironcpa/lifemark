@@ -34,7 +34,7 @@
     <input type="button" value="new" onclick="create_new({{mkey}})" />
     <br/>
     {% if link and link != '' %}
-    title: <span id="link"><a href="{{ link }}">{{ get_lifemark_field(lm, 'title') }}</a></span>
+    title: <span id="link"><a target='_blank' href="{{ link }}">{{ get_lifemark_field(lm, 'title') }}</a></span>
     <span id="title" style="display: none">{{ get_lifemark_field(lm, 'title') }}</span><br/>
     {% else %}
     title: <span id="title">{{ get_lifemark_field(lm, 'title') }}</span><br/>
