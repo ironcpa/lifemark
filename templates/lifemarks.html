@@ -170,8 +170,21 @@
 
             $('#search_form')[0].submit()
         }
-        function go_to_content(key) {
-            $('#row_'+key).get(0).scrollIntoView()
+        function go_to_content(key, line) {
+            if (! line) {
+                $('#row_'+key).get(0).scrollIntoView()
+            }
+            else {
+                var desc_pre = $('#row_'+key).find('pre')
+                var pre_top = desc_pre.offset().top
+                var pre_height = desc_pre.height()
+                var total_line = desc_pre.html().split(/\n/).length
+
+                var line_height = pre_height / total_line
+                var target_pixcel = pre_top + line * line_height
+
+                window.scrollTo(0, target_pixcel)
+            }
         }
     </script>
     <body>
@@ -221,7 +234,7 @@
                 </td>
             </tr>
             {%   for l in t['lines'] %}
-            <tr onclick="go_to_content('{{k}}')">
+            <tr onclick="go_to_content('{{k}}', {{ l[1] }})">
                 <td></td>
                 <td>{{ l[0] }}</td>
                 <td>{{ l[1] }}</td>
