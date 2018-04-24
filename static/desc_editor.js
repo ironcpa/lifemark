@@ -25,11 +25,11 @@ function create_editor_buttons(editor) {
                    create_button('del', 'delete_curr_line()'),
                    create_button('>', 'indent_selected()'),
                    create_button('<', 'indent_selected(-1)'),
-                   create_button('[-]', 'set_header(editor_module.HEADERS.todo)'),
-                   create_button('[>]', 'set_header(editor_module.HEADERS.progress)'),
-                   create_button('[+]', 'set_header(editor_module.HEADERS.complete)'),
-                   create_button('[p]', 'set_header(editor_module.HEADERS.postpone)'),
-                   create_button('[x]', 'set_header(editor_module.HEADERS.cancel)')]
+                   create_button('[-]', 'set_header_selected(editor_module.HEADERS.todo)'),
+                   create_button('[>]', 'set_header_selected(editor_module.HEADERS.progress)'),
+                   create_button('[+]', 'set_header_selected(editor_module.HEADERS.complete)'),
+                   create_button('[p]', 'set_header_selected(editor_module.HEADERS.postpone)'),
+                   create_button('[x]', 'set_header_selected(editor_module.HEADERS.cancel)')]
 
     var table_str = '<table id=' + editor_module.BUTTON_NAME + '><tr>'
     for (i=0; i<buttons.length; i++) {
@@ -50,19 +50,19 @@ function handle_keys(e) {
 
     if (e.ctrlKey && e.keyCode == 189) {
         e.preventDefault()
-        set_header(editor_module.HEADERS.todo)
+        set_header_selected(editor_module.HEADERS.todo)
     } else if (e.ctrlKey && e.keyCode == 187) {
         e.preventDefault()
-        set_header(editor_module.HEADERS.complete)
+        set_header_selected(editor_module.HEADERS.complete)
     } else if (e.ctrlKey && e.keyCode == 79) {
         e.preventDefault()
-        set_header(editor_module.HEADERS.progress)
+        set_header_selected(editor_module.HEADERS.progress)
     } else if (e.ctrlKey && e.keyCode == 80) {
         e.preventDefault()
-        set_header(editor_module.HEADERS.postpone)
+        set_header_selected(editor_module.HEADERS.postpone)
     } else if (e.ctrlKey && e.keyCode == 88) {
         e.preventDefault()
-        set_header(editor_module.HEADERS.cancel)
+        set_header_selected(editor_module.HEADERS.cancel)
     } else if (e.ctrlKey && e.keyCode == 190) {
         e.preventDefault()
         indent_selected()
@@ -180,6 +180,12 @@ function indent_selected(indent) {
     var new_sel_end = old_sel_end + lines.length * d
     set_editor_focus(new_sel_start, new_sel_end)
 }
+function set_header_selected(header) {
+    var lines = get_selected_line_nos()
+    for (var i=0; i<lines.length; i++) {
+        set_header(lines[i], header)
+    }
+}
 function insert_new_line_blow() {
     var line_data = get_curr_line()
     var line_no = line_data.line
@@ -216,12 +222,11 @@ function delete_curr_line() {
     editor.value = content
     set_editor_focus(old_pos)
 }
-function set_header(header) {
-    var line_data = get_curr_line()
-    var line_no = line_data.line
-    var content = line_data.text
-    var old_pos = line_data.pos
+function set_header(line_no, header) {
+    var l = get_line(line_no)
+    var old_pos = l.pos
     var new_pos = 0
+    var content = l.text
 
     var has_header = false
 
