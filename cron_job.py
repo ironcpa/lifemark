@@ -3,6 +3,7 @@ import time
 import datetime
 import urllib
 import db_handler
+import run_scrappers
 from slackclient import SlackClient
 
 slack_client = SlackClient(os.environ.get('SLACK_TOKEN'))
@@ -59,3 +60,6 @@ if dued_lifemarks:
     print('message sent', message)
 
     send_slack_noti(message)
+
+# todo: run scrappers
+run_scrappers.main()
