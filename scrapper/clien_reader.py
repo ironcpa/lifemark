@@ -44,10 +44,14 @@ async def parse_article_detail(event_loop, index, title, url):
     return index, title, content
 
 
-if __name__ == '__main__':
+def main():
     fetch_target('https://www.clien.net',
                  '',
                  'static/gen/clien.recommend.html',
                  get_articles,
                  get_article_details,
                  parse_article_detail)
+
+
+if __name__ == '__main__':
+    main()

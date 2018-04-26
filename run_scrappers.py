@@ -3,6 +3,7 @@ import os
 sys.path.append("scrapper")
 import si_com_nfl_main_reader
 import si_com_nfl_peter_reader
+import clien_reader
 
 
 def remove_old_files():
@@ -20,6 +21,7 @@ def main():
     remove_old_files()
     si_com_nfl_main_reader.main()
     si_com_nfl_peter_reader.main()
+    clien_reader.main()
 
 
 if __name__ == '__main__':

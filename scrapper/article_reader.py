@@ -56,7 +56,13 @@ def create_file(file_name, articles):
 def create_html_file(file_name, articles):
     print('debug:create_html_file:')
     print('\t', file_name)
+    no_cache = "<meta http-equiv='Cache-Control' content='no-store' />"
+    viewport_meta = "<meta name='viewport' content='width=device-width, user-scalable=yes initial-scale=1'>"
+    article_style = ''
+
     with open(file_name, 'wt') as f:
+        f.write(no_cache)
+        f.write(viewport_meta)
         f.write("<div style='max-width: 800px'>")
         for article in articles:
             if not article[2]:
@@ -66,10 +72,13 @@ def create_html_file(file_name, articles):
             article_file = '{}_{}.html'.format(t, article[0])
             article_file_full = 'static/gen/' + article_file
 
-            f.write("<a href='{}'>{}</a><br/>\n".format(article_file,
+            f.write("<h3><a href='{}'>{}</a><br/></h3>".format(article_file,
                                                         article[1]))
             with open(article_file_full, 'wt') as af:
-                af.write("<div class='article' style='max-width: 800px'>")
+                af.write(no_cache)
+                af.write(viewport_meta)
+                af.write("<meta http-equiv='Cache-Control' content='no-store' />")
+                af.write("<div class='article' style='{}'>".format(article_style))
                 af.write("    <h1>{}. {}</h1>".format(article[0], article[1]))
                 af.write("    <div>{}</div>".format(article[2]))
                 af.write("</div>")
