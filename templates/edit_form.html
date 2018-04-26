@@ -98,19 +98,13 @@
                 <td><input id="edit_tags" name="tags" size="30" /></td>
             </tr>
             <tr>
-                <td colspan="2"><textarea id="edit_desc" name="desc" rows="10", cols="45"></textarea></td>
-            </tr>
-            <tr>
                 <td>img link</td>
                 <td><input id="edit_img_link" name="img_link"/></td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <img id="edit_img" src="" alt="image" ondblclick="show_fullsize_img('edit')"/>
-                </td>
             </tr>
             <input type="hidden" id="edit_geo_lat" name="geo_lat" />
             <input type="hidden" id="edit_geo_lon" name="geo_lon" />
         </table>
+        <textarea id="edit_desc" name="desc" rows="10" style="width: 100%"></textarea>
+        <img id="edit_img" src="" alt="image" ondblclick="show_fullsize_img('edit')"/>
     </form>
 </div>
