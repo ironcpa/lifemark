@@ -5,12 +5,13 @@ import psycopg2
 
 LIFEMARK_TABLE = 'lifemark'
 TEXT_FIELDS = ['title',
-                   'link',
-                   'descr',
-                   'img_link',
-                   'category',
-                   'state',
-                   'rating']
+               'link',
+               'descr',
+               'tags',
+               'img_link',
+               'category',
+               'state',
+               'rating']
 
 
 def as_kst(time_column):
