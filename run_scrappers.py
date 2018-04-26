@@ -11,7 +11,7 @@ def remove_old_files():
     if not os.path.isdir(dir_name):
         return
 
-    files = [f for f in os.listdir(dir_name)]
+    files = [os.path.join(dir_name, f) for f in os.listdir(dir_name)]
     for f in files:
         os.remove(f)
 
