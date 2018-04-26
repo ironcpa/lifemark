@@ -54,7 +54,10 @@ def create_file(file_name, articles):
 
 
 def create_html_file(file_name, articles):
+    print('debug:create_html_file:')
+    print('\t', file_name)
     with open(file_name, 'wt') as f:
+        f.write("<div style='max-width: 800px'>")
         for article in articles:
             if not article[2]:
                 continue
@@ -66,7 +69,8 @@ def create_html_file(file_name, articles):
             f.write("<a href='{}'>{}</a><br/>\n".format(article_file,
                                                         article[1]))
             with open(article_file_full, 'wt') as af:
-                af.write("<div class='article'>")
+                af.write("<div class='article' style='max-width: 800px'>")
                 af.write("    <h1>{}. {}</h1>".format(article[0], article[1]))
                 af.write("    <div>{}</div>".format(article[2]))
                 af.write("</div>")
+        f.write("</div>")

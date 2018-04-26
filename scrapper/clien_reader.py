@@ -26,37 +26,28 @@ def get_article_details(site_url, articles):
     return detail_datas
 
 
-async def get_article_detail(event_loop, index, title, url):
+async def parse_article_detail(event_loop, index, title, url):
     html = await event_loop.run_in_executor(None, urlopen, url)
     bs = BeautifulSoup(html.read(), 'html.parser')
 
     title = bs.find('title').text
+    '''
     paragraphs = bs.find('body').findAll('p')
 
     content = ''
     for p in paragraphs:
         if p and len(p.text.strip()) > 0:
             content += p.text + '\n'
+    '''
+    content = bs.find('body').find('body')
 
     return index, title, content
-
-
-async def fetch_detail(event_loop, detail_datas):
-    futures = [asyncio.ensure_future(get_article_detail(event_loop,
-                                                        index,
-                                                        val[0],
-                                                        val[1]))
-               for index, val in detail_datas.items()]
-    result = await asyncio.gather(*futures)
-    print('========== after gather ============')
-    print(len(result))
-    # print_articles(result)
-    create_file('clien_recommand.txt', result)
 
 
 if __name__ == '__main__':
     fetch_target('https://www.clien.net',
                  '',
+                 'static/gen/clien.recommend.html',
                  get_articles,
                  get_article_details,
-                 fetch_detail)
+                 parse_article_detail)
