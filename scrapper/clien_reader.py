@@ -1,44 +1,31 @@
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import asyncio
+import requests
+import os
 from article_reader import fetch_target, print_articles, create_file
+from article_reader import get_bs_object, get_bs_object_async
+
+SITE_URL = 'https://www.clien.net'
 
 
-def get_articles(bs_object):
+def get_article_urls(url):
     article_class = 'section_list recommended'
-    group = bs_object.findAll('div', {'class': article_class})
+
+    bs = get_bs_object(url)
+    group = bs.findAll('div', {'class': article_class})
     articles = group[0].findAll('div', {'class': 'list_title'})
 
-    return articles
+    return [SITE_URL + e.a['href'] for e in articles]
 
 
-def get_article_details(site_url, articles):
-    detail_datas = {}
-    for i, e in enumerate(articles):
-        title_span = e.a.findAll('span', {'class': 'subject'})
-        title = title_span[0].text
+async def get_article_detail(event_loop, index, article_url):
+    title_class = 'post_subject'
 
-        detail_url = site_url + e.a['href']
-        detail_datas[i] = (title, detail_url)
+    bs = await get_bs_object_async(event_loop, article_url)
 
-        print('debug: title:', title)
-        print('debug: url:', detail_url)
-    return detail_datas
-
-
-async def parse_article_detail(event_loop, index, title, url):
-    html = await event_loop.run_in_executor(None, urlopen, url)
-    bs = BeautifulSoup(html.read(), 'html.parser')
-
-    title = bs.find('title').text
-    '''
-    paragraphs = bs.find('body').findAll('p')
-
-    content = ''
-    for p in paragraphs:
-        if p and len(p.text.strip()) > 0:
-            content += p.text + '\n'
-    '''
+    title_tag = bs.find('h3', {'class': title_class})
+    title = title_tag.span.text if title_tag else "can't parse title"
     content = bs.find('body').find('body')
 
     return index, title, content
@@ -48,10 +35,10 @@ def main():
     fetch_target('https://www.clien.net',
                  '',
                  'static/gen/clien.recommend.html',
-                 get_articles,
-                 get_article_details,
-                 parse_article_detail)
+                 get_article_urls,
+                 get_article_detail)
 
 
 if __name__ == '__main__':
+    os.chdir('..')
     main()

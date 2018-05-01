@@ -66,17 +66,17 @@
         },
         "flask": {
             "hashes": [
-                "sha256:0749df235e3ff61ac108f69ac178c9770caeaccad2509cb762ce1f65570a8856",
-                "sha256:49f44461237b69ecd901cc7ce66feea0319b9158743dd27a2899962ab214dac1"
+                "sha256:dbe2a9f539f4d0fe26fa44c08d6e556e2a4a4dd3a3fb0550f39954cf57571363",
+                "sha256:cfc15b45622f9cfee6b5803723070fd0f489b3bd662179195e702cb95fd924c8"
             ],
-            "version": "==0.12.2"
+            "version": "==1.0.1"
         },
         "gunicorn": {
             "hashes": [
-                "sha256:75af03c99389535f218cc596c7de74df4763803f7b63eb09d77e92b3956b36c6",
-                "sha256:eee1169f0ca667be05db3351a0960765620dad53f53434262ff8901b68a1b622"
+                "sha256:7ef2b828b335ed58e3b64ffa84caceb0a7dd7c5ca12f217241350dec36a1d5dc",
+                "sha256:bc59005979efb6d2dd7d5ba72d99f8a8422862ad17ff3a16e900684630dd2a10"
             ],
-            "version": "==19.7.1"
+            "version": "==19.8.1"
         },
         "idna": {
             "hashes": [
@@ -179,10 +179,10 @@
         },
         "twilio": {
             "hashes": [
-                "sha256:1a17380f92f1147bfe251886e69c76f2c75fdfd88778b6f0bae60e94efd8fd42",
-                "sha256:7713a02356fbe5d1799d5b0387b6103bf8d660170c48855206271dec4e48bec9"
+                "sha256:2210b38d75099ad1a53dce64a32fff3a68199b592400b6b17a0479ea6a9a93a9",
+                "sha256:52a6a99b473a274ef088baebf76529c38d0c65be5495a291f4fa2270c1e5d4aa"
             ],
-            "version": "==6.12.1"
+            "version": "==6.13.0"
         },
         "urllib3": {
             "hashes": [

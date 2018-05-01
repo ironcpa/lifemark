@@ -1,25 +1,38 @@
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import asyncio
+import requests
 
+USER_AGENT = 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Mobile Safari/537.36'
+
+
+def get_bs_object(url):
+    headers = {'User-Agent': USER_AGENT}
+    res = requests.get(url, headers=headers)
+
+    return BeautifulSoup(res.text, 'html.parser')
+
+async def get_bs_object_async(event_loop, url):
+    headers = {'User-Agent': USER_AGENT}
+    res = await event_loop.run_in_executor(None, requests.get, url, headers)
+
+    return BeautifulSoup(res.text, 'html.parser')
 
 def fetch_target(site_url,
                  section_url,
                  out_file_name,
                  article_list_func,
-                 article_detail_func,
-                 parse_article_detail_func):
-    html = urlopen(site_url + section_url)
-    bs = BeautifulSoup(html.read(), 'html.parser')
-
-    articles = article_list_func(bs)
-    detail_datas = article_detail_func(site_url, articles)
+                 article_detail_func):
+    full_url = site_url + section_url
+    article_urls = article_list_func(full_url)
 
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(fetch_article_detail(loop,
-                                                 parse_article_detail_func,
-                                                 detail_datas,
-                                                 out_file_name))
+
+    futures = [asyncio.ensure_future(article_detail_func(loop, i, url)) for i, url in enumerate(article_urls)]
+    results = loop.run_until_complete(asyncio.gather(*futures))
+
+    print(results)
+    create_html_file(out_file_name, results)
 
 
 async def fetch_article_detail(event_loop,
@@ -47,6 +60,8 @@ def print_articles(articles):
 
 
 def create_file(file_name, articles):
+    import os
+    print(os.getcwd())
     with open(file_name, 'wt') as f:
         for article in articles:
             f.write('[{}. {}]\n'.format(article[0], article[1]))
@@ -56,6 +71,7 @@ def create_file(file_name, articles):
 def create_html_file(file_name, articles):
     print('debug:create_html_file:')
     print('\t', file_name)
+    print('\t', articles)
     no_cache = "<meta http-equiv='Cache-Control' content='no-store' />"
     viewport_meta = "<meta name='viewport' content='width=device-width, user-scalable=yes initial-scale=1'>"
     article_style = ''
@@ -65,6 +81,7 @@ def create_html_file(file_name, articles):
         f.write(viewport_meta)
         f.write("<div style='max-width: 800px'>")
         for article in articles:
+            print('debug:', article)
             if not article[2]:
                 continue
 
