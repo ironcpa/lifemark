@@ -1,4 +1,7 @@
 import os
+working_dir = os.environ.get('WORKING_DIR', '')
+if len(working_dir) > 0:
+    os.chdir(working_dir)
 import time
 import datetime
 import urllib
