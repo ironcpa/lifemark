@@ -74,7 +74,8 @@ function handle_keys(e) {
         insert_new_line_blow()
     } else if (e.ctrlKey && e.keyCode == 68) {
         e.preventDefault()
-        delete_curr_line()
+        // delete_curr_line()
+        delete_selected_lines()
     }
 }
 function get_curr_line() {
@@ -142,6 +143,7 @@ function get_selected_line_nos() {
         }
         cur_pos += lines[i].length + 1
     }
+    console.log('get_selected_line_nos: ' + line_nos)
     return line_nos
 }
 function indent_line(line_no, indent) {
@@ -208,6 +210,23 @@ function insert_new_line_blow() {
     editor.value = content
     set_editor_focus(new_pos)
 }
+function delete_selected_lines() {
+    var line_nos = get_selected_line_nos()
+    var old_pos = get_curr_line().pos
+
+    var editor = get_editor()
+    var lines = editor.value.split('\n')
+
+    var start_lno = line_nos[0]
+    var del_len = line_nos.length
+    for (var i=0; i<del_len; i++) {
+        lines.splice(start_lno, 1)
+    }
+    var content = lines.join('\n')
+
+    editor.value = content
+    set_editor_focus(old_pos)
+}
 function delete_curr_line() {
     var line_data = get_curr_line()
     var line_no = line_data.line
@@ -221,6 +240,17 @@ function delete_curr_line() {
 
     editor.value = content
     set_editor_focus(old_pos)
+}
+function delete_line(line_no) {
+    var editor = get_editor()
+    var lines = editor.value.split('\n')
+
+    lines.splice(line_no, 1)
+    content = lines.join('\n')
+
+    editor.value = content
+    console.log('delete_line: ' + line_no + ' =======')
+    console.log(content)
 }
 function set_header(line_no, header) {
     var l = get_line(line_no)
