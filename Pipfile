@@ -15,6 +15,7 @@ requests = "*"
 twilio = "*"
 slackclient = "*"
 "bs4" = "*"
+selenium = "*"
 
 
 [dev-packages]

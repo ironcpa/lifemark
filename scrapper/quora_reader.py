@@ -10,8 +10,11 @@ from article_reader import get_bs_object, get_bs_object_async
 def get_article_urls(url):
     bs = get_bs_object(url)
 
-    article_class = 'postArticle-readMore'
-    group = bs.findAll('div', {'class': article_class})
+    with open('quora_test.html', 'wt') as f:
+        f.write(str(bs.html))
+
+    article_class = 'question_link'
+    group = bs.findAll('a', {'class': article_class})
 
     links = [div.a['href'] for div in group]
     return links
@@ -38,17 +41,14 @@ async def get_article_detail(event_loop, index, article_url):
 
 
 def main():
-    targets_accounts = ['@cramforce',
-                        'python-pandemonium']
-    for target in targets_accounts:
-        base_url = 'https://medium.com'
-        sub_url = '/' + target + '/latest'
-        out_file = 'static/gen/medium.' + target + '.recent.html'
-        fetch_target(base_url,
-                     sub_url,
-                     out_file,
-                     get_article_urls,
-                     get_article_detail)
+    base_url = 'https://www.quora.com'
+    sub_url = '/'
+    out_file = 'static/gen/quora.top_stories.html'
+    fetch_target(base_url,
+                 sub_url,
+                 out_file,
+                 get_article_urls,
+                 get_article_detail)
 
 
 if __name__ == '__main__':
