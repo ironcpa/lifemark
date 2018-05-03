@@ -8,9 +8,21 @@ from data_define import LifemarkFieldDef, Lifemark
 from pprint import pprint
 from collections import OrderedDict
 import json
+from functools import wraps
+import os
 
 application = Flask(__name__)
 application.secret_key = 'dummy key'
+
+
+def check_logged_in(func):
+    @wraps(func)
+    def decorator(*args, **kwargs):
+        if not session.get('logged_in'):
+            return render_template('login.html')
+        else:
+            return func(*args, **kwargs)
+    return decorator
 
 
 def get_keywords_lines(lifemarks, keywords, search_fields=None):
@@ -38,7 +50,6 @@ def get_keywords_lines(lifemarks, keywords, search_fields=None):
                                'category': lm.category,
                                'state': lm.state}
 
-    # pprint(search_dict)
     return search_dict
 
 
@@ -75,9 +86,31 @@ def get_req_datetime(request):
 
 
 @application.route('/')
+@check_logged_in
 def root():
-    return 'this is flask root'
+    if session.get('logged_in'):
+        return ("this is flask root"
+                "<a href='/logout'>Logout</a>")
+    else:
+        return "this is flask root"
 
+
+@application.route('/login', methods=['POST'])
+def login():
+    pwd = os.environ['LIFEMARK_PWD']
+    if request.form['password'] == pwd:
+        session['logged_in'] = True
+    else:
+        print('login failed')
+        # flash('wrong password!')
+    return redirect('/lifemarks')
+
+
+@application.route('/logout')
+@check_logged_in
+def logout():
+    session['logged_in'] = False
+    return root()
 
 ## doen't need this route: in nginx server config
 #@application.route('/heart_beat')
@@ -86,6 +119,7 @@ def root():
 
 
 @application.route('/lifemarks', methods=['GET'])
+@check_logged_in
 def show_lifemarks():
     keywords = [k for k in request.values['keyword'].split()] \
                if 'keyword' in request.values else None
@@ -124,11 +158,13 @@ def show_lifemarks():
 
 
 @application.route('/search_lifemark', methods=['POST'])
+@check_logged_in
 def search_lifemark():
     return redirect('/lifemarks', code=307)
 
 
 @application.route('/add_lifemark', methods=['POST'])
+@check_logged_in
 def add_lifemark():
     title = request.values['title']
     link = request.values['link']
@@ -161,6 +197,7 @@ def add_lifemark():
 
 
 @application.route('/edit_lifemark', methods=['POST'])
+@check_logged_in
 def edit_lifemark():
     key = request.values['key']
     title = request.values['title']
@@ -196,6 +233,7 @@ def edit_lifemark():
 
 
 @application.route('/del_lifemark', methods=['POST'])
+@check_logged_in
 def del_lifemark():
     key = request.values['key']
 
@@ -258,6 +296,7 @@ def show_map():
 
 
 @application.route('/all_daily')
+@check_logged_in
 def all_daily():
     daily_list = db_handler.get_daily()
 
@@ -271,6 +310,7 @@ def all_daily():
 
 
 @application.route('/save_daily', methods=['POST'])
+@check_logged_in
 def save_daily():
     req_data = request.values['save_json']
     dict = json.loads(req_data)

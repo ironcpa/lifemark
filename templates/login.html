@@ -1,0 +1,18 @@
+{% block body %}
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+{% if session['logged_in'] %}
+<p>Your're Logged in already!</p>
+{% else %}
+<form action="/login" method="POST">
+    <input type="username" name="username" placeholder="Username"/>
+    <input type="password" name="password" placeholder="Password"/>
+    <input type="submit" value="Log In"/>
+</form>
+{% endif %}
+{% endblock %}
